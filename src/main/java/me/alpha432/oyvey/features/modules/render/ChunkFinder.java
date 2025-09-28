@@ -12,9 +12,9 @@ import net.minecraft.world.chunk.Chunk;
 
 import java.awt.*;
 
-public class ChunkDeepslateHighlighter extends Module {
-    public ChunkDeepslateHighlighter() {
-        super("ChunkDeepslateHighlighter", "Highlights chunk layer if rotated deepslate/deepslate is found above Y=8", Category.RENDER, true, false, false);
+public class ChunkFinder extends Module {
+    public ChunkFinder() {
+        super("ChunkFinder", "Highlights chunk layer if rotated deepslate/deepslate is found above Y=8", Category.RENDER, true, false, false);
     }
 
     @Subscribe
@@ -59,3 +59,4 @@ public class ChunkDeepslateHighlighter extends Module {
         }
     }
 }
+

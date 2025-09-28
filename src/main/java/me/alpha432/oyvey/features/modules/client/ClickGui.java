@@ -70,7 +70,7 @@ public class ClickGui extends Module {
     @Override
     public void onEnable() {
         if (fullNullCheck()) return;
-        mc.setScreen(new OyVeyGui(true)); // pass a flag to use new smooth design
+        mc.setScreen(new OyVeyGui()); // fixed: use no-arg constructor
     }
 
     @Override

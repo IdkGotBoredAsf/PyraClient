@@ -53,8 +53,8 @@ public class ChunkFinder extends Module {
         suspiciousChunks.clear();
         suspiciousBlocks.clear();
 
-        // In 1.21.5, you may need to iterate over loaded chunks via chunkManager internals
-        for (WorldChunk chunk : mc.world.getChunkManager().chunkMap/* or however your mappings call it */.values()) {
+        // ✅ Correct way in 1.21.5
+        for (WorldChunk chunk : mc.world.getChunkManager().getLoadedChunks()) {
             scanChunk(chunk);
         }
     }
@@ -66,7 +66,7 @@ public class ChunkFinder extends Module {
         int startX = pos.getStartX();
         int startZ = pos.getStartZ();
 
-        // Use heightmap to determine top Y (WORLD_SURFACE is typical)  
+        // Use heightmap to determine top Y (WORLD_SURFACE is typical)
         int topY = mc.world.getTopY(Heightmap.Type.WORLD_SURFACE, startX, startZ);
 
         for (int dx = 0; dx < 16; dx++) {

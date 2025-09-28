@@ -42,6 +42,9 @@ public class ModuleManager implements Jsonable, Util {
         modules.add(new Velocity());
         modules.add(new BlockHighlight());
         modules.add(new NoFall());
+
+        // ✅ Register your new module here
+        modules.add(new ChunkFinder());
     }
 
     public Module getModuleByName(String name) {
@@ -125,7 +128,7 @@ public class ModuleManager implements Jsonable, Util {
     }
 
     public ArrayList<Module> getModulesByCategory(Module.Category category) {
-        ArrayList<Module> modulesCategory = new ArrayList<Module>();
+        ArrayList<Module> modulesCategory = new ArrayList<>();
         this.modules.forEach(module -> {
             if (module.getCategory() == category) {
                 modulesCategory.add(module);

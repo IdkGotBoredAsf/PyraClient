@@ -29,9 +29,13 @@ public class ChunkFinder extends Module {
         boolean found = false;
         int targetY = -1;
 
+        // Use correct world height values instead of getTopY()
+        int minY = mc.world.getBottomY();
+        int maxY = mc.world.getBottomY() + mc.world.getHeight();
+
         outerLoop:
         for (int x = 0; x < 16; x++) {
-            for (int y = 9; y < mc.world.getTopY(); y++) { // Start at y=9
+            for (int y = Math.max(9, minY); y < maxY; y++) { // Start at y=9, respect world min/max
                 for (int z = 0; z < 16; z++) {
                     BlockPos checkPos = chunk.getPos().getStartPos().add(x, y, z);
                     Block block = mc.world.getBlockState(checkPos).getBlock();
@@ -59,4 +63,3 @@ public class ChunkFinder extends Module {
         }
     }
 }
-

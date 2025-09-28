@@ -53,9 +53,11 @@ public class ChunkFinder extends Module {
         suspiciousChunks.clear();
         suspiciousBlocks.clear();
 
-        // ✅ Correct way in 1.21.5
-        for (WorldChunk chunk : mc.world.getChunkManager().getLoadedChunks()) {
-            scanChunk(chunk);
+        // ✅ Correct iteration for 1.21.5
+        for (WorldChunk chunk : mc.world.getChunkManager().chunks.values()) {
+            if (chunk != null) {
+                scanChunk(chunk);
+            }
         }
     }
 

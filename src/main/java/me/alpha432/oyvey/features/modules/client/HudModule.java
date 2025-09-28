@@ -14,9 +14,8 @@ public class HudModule extends Module {
 
     @Override
     public void onRender2D(Render2DEvent event) {
-        String text = TextUtil.text("{global} %s {} %s", OyVey.NAME, OyVey.VERSION);
+        var text = TextUtil.text("{global} %s {} %s", OyVey.NAME, OyVey.VERSION);
 
-        // Example: use the color manager for dynamic HUD color
         Color hudColor = new Color(
             OyVey.colorManager.getColor().getRed(),
             OyVey.colorManager.getColor().getGreen(),
@@ -27,7 +26,7 @@ public class HudModule extends Module {
         event.getContext().drawTextWithShadow(
             mc.textRenderer,
             text,
-            4, 4,  // position
+            4, 4,
             hudColor.getRGB()
         );
     }

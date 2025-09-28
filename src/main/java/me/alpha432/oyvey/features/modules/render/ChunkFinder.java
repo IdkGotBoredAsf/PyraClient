@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import me.alpha432.oyvey.event.impl.Render3DEvent;
 import me.alpha432.oyvey.features.modules.Module;
 import me.alpha432.oyvey.features.settings.Setting;
+import me.alpha432.oyvey.mixin.accessor.ClientChunkManagerAccessor;
 import me.alpha432.oyvey.util.render.RenderUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -53,11 +54,12 @@ public class ChunkFinder extends Module {
         suspiciousChunks.clear();
         suspiciousBlocks.clear();
 
-        // ✅ Correct iteration for 1.21.5
-        for (WorldChunk chunk : mc.world.getChunkManager().chunks.values()) {
-            if (chunk != null) {
-                scanChunk(chunk);
-            }
+        // ✅ Access chunks safely via accessor mixin
+        Map<Long, WorldChunk> loadedChunks =
+                ((ClientChunkManagerAccessor) mc.world.getChunkManager()).getChunks();
+
+        for (WorldChunk chunk : loadedChunks.values()) {
+            if (chunk != null) scanChunk(chunk);
         }
     }
 
@@ -68,7 +70,7 @@ public class ChunkFinder extends Module {
         int startX = pos.getStartX();
         int startZ = pos.getStartZ();
 
-        // Use heightmap to determine top Y (WORLD_SURFACE is typical)
+        // Use heightmap to determine top Y
         int topY = mc.world.getTopY(Heightmap.Type.WORLD_SURFACE, startX, startZ);
 
         for (int dx = 0; dx < 16; dx++) {

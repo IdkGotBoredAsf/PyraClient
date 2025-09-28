@@ -16,6 +16,7 @@ import me.alpha432.oyvey.features.modules.player.FastPlace;
 import me.alpha432.oyvey.features.modules.player.NoFall;
 import me.alpha432.oyvey.features.modules.player.Velocity;
 import me.alpha432.oyvey.features.modules.render.BlockHighlight;
+import me.alpha432.oyvey.features.modules.render.ChunkFinder;
 import me.alpha432.oyvey.util.traits.Jsonable;
 import me.alpha432.oyvey.util.traits.Util;
 

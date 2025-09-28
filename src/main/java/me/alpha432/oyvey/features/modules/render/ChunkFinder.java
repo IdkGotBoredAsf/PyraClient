@@ -4,7 +4,6 @@ import com.google.common.eventbus.Subscribe;
 import me.alpha432.oyvey.event.impl.Render3DEvent;
 import me.alpha432.oyvey.features.modules.Module;
 import me.alpha432.oyvey.features.settings.Setting;
-import me.alpha432.oyvey.mixin.accessor.ClientChunkManagerAccessor;
 import me.alpha432.oyvey.util.render.RenderUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -49,17 +48,21 @@ public class ChunkFinder extends Module {
 
     @Override
     public void onUpdate() {
-        if (mc.world == null) return;
+        if (mc.world == null || mc.player == null) return;
 
         suspiciousChunks.clear();
         suspiciousBlocks.clear();
 
-        // ✅ Access chunks safely via accessor mixin
-        Map<Long, WorldChunk> loadedChunks =
-                ((ClientChunkManagerAccessor) mc.world.getChunkManager()).getChunks();
+        // Scan nearby chunks around the player
+        int radius = 8; // how many chunks out from player
+        int playerChunkX = mc.player.getChunkPos().x;
+        int playerChunkZ = mc.player.getChunkPos().z;
 
-        for (WorldChunk chunk : loadedChunks.values()) {
-            if (chunk != null) scanChunk(chunk);
+        for (int cx = -radius; cx <= radius; cx++) {
+            for (int cz = -radius; cz <= radius; cz++) {
+                WorldChunk chunk = mc.world.getChunk(playerChunkX + cx, playerChunkZ + cz);
+                if (chunk != null) scanChunk(chunk);
+            }
         }
     }
 
@@ -114,11 +117,11 @@ public class ChunkFinder extends Module {
                 int endZ = pos.getEndZ();
 
                 if (flatMode.getValue()) {
-                    // just a thin horizontal slice at Y = 64
+                    // thin horizontal slice
                     Box box = new Box(startX, 64, startZ, endX + 1, 65, endZ + 1);
                     RenderUtil.drawBox(event.getMatrix(), box, color, 1f);
                 } else {
-                    // full vertical up to surface
+                    // full vertical box
                     int topY = mc.world.getTopY(Heightmap.Type.WORLD_SURFACE, startX, startZ);
                     Box box = new Box(startX, mc.world.getBottomY(), startZ, endX + 1, topY, endZ + 1);
                     RenderUtil.drawBox(event.getMatrix(), box, color, 1f);
@@ -129,7 +132,6 @@ public class ChunkFinder extends Module {
         if (highlightBlocks.getValue()) {
             for (Set<BlockPos> blocks : suspiciousBlocks.values()) {
                 for (BlockPos bp : blocks) {
-                    // Expand slightly so box is visible
                     Box box = new Box(bp).expand(0.002);
                     RenderUtil.drawBox(event.getMatrix(), box, color, 1f);
                 }
